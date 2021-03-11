@@ -39,11 +39,11 @@ using namespace std;
 class Tasks {
 public:
     /**
-     * @brief Initializes main structures (semaphores, tasks, mutex, etc.)
+     * @brief Initializes mafrom in structures (semaphores, tasks, mutex, etc.)
      */
     void Init();
 
-    /**
+    /**from 
      * @brief Starts tasks
      */
     void Run();
@@ -67,7 +67,6 @@ private:
     int robotStarted = 0;
     int move = MESSAGE_ROBOT_STOP;
     
-    
     /**********************************************************************/
     /* Tasks                                                              */
     /**********************************************************************/
@@ -83,6 +82,7 @@ private:
     /**********************************************************************/
     
     RT_TASK th_battery;
+    RT_TASK th_sendToRobot;
     
     /**********************************************************************/
     /* Mutex                                                              */
@@ -105,6 +105,7 @@ private:
     /**********************************************************************/
     int MSG_QUEUE_SIZE;
     RT_QUEUE q_messageToMon;
+    RT_QUEUE q_messageToRobot;
     
     /**********************************************************************/
     /* Tasks' functions                                                   */
@@ -144,6 +145,15 @@ private:
      */
     void CheckBatteryTask(void *arg);
     
+    /**
+     * @brief Thread sending data to robot.
+     */
+    void SendToRobotTask(void *arg);
+    
+    /**
+     * @brief Thread receiving data from robot.
+     */
+    void ReceiveFromRobotTask(void *arg);
     
     /**********************************************************************/
     /* Queue services                                                     */
@@ -151,9 +161,10 @@ private:
     /**
      * Write a message in a given queue
      * @param queue Queue identifier
-     * @param msg Message to be stored
+     * @param msg Message to be storedbattery level verification
      */
     void WriteInQueue(RT_QUEUE *queue, Message *msg);
+        
     
     /**
      * Read a message from a given queue, block if empty
