@@ -68,6 +68,11 @@ private:
     int move = MESSAGE_ROBOT_STOP;
     
     /**********************************************************************/
+    /* Shared data                                                        */
+    /**********************************************************************/
+    int robotStartedWithWD = 0;
+    
+    /**********************************************************************/
     /* Tasks                                                              */
     /**********************************************************************/
     RT_TASK th_server;
@@ -78,11 +83,13 @@ private:
     RT_TASK th_move;
     
     /**********************************************************************/
-    /* Our new tasks                                                          */
+    /* Our new tasks                                                      */
     /**********************************************************************/
     
     RT_TASK th_battery;
     RT_TASK th_sendToRobot;
+    RT_TASK th_startRobotWithWD;
+    RT_TASK th_reloadWD;
     
     /**********************************************************************/
     /* Mutex                                                              */
@@ -93,18 +100,35 @@ private:
     RT_MUTEX mutex_move;
 
     /**********************************************************************/
+    /* Our Mutex                                                          */
+    /**********************************************************************/
+    
+    RT_MUTEX mutex_robotStartedWithWD;
+    
+    /**********************************************************************/
     /* Semaphores                                                         */
     /**********************************************************************/
     RT_SEM sem_barrier;
     RT_SEM sem_openComRobot;
     RT_SEM sem_serverOk;
     RT_SEM sem_startRobot;
+    
+    /**********************************************************************/
+    /* Our Semaphores                                                     */
+    /**********************************************************************/
 
+    RT_SEM sem_startRobotWithWD;
+    
     /**********************************************************************/
     /* Message queues                                                     */
     /**********************************************************************/
     int MSG_QUEUE_SIZE;
     RT_QUEUE q_messageToMon;
+    
+    /**********************************************************************/
+    /* Our Message queues                                                 */
+    /**********************************************************************/
+    
     RT_QUEUE q_messageToRobot;
     
     /**********************************************************************/
@@ -154,6 +178,16 @@ private:
      * @brief Thread receiving data from robot.
      */
     void ReceiveFromRobotTask(void *arg);
+    
+    /**
+     * @brief Thread starting the communication with the robot with Watchdog.
+     */
+    void StartRobotWithWDTask(void *arg);
+    
+    /**
+     * @brief Thread reloading the watchdog periodically.
+     */
+    void ReloadWDTask(void *arg);
     
     /**********************************************************************/
     /* Queue services                                                     */
