@@ -29,7 +29,9 @@
 #define PRIORITY_BATTERY 18
 #define PRIORITY_SENDTOROBOT 22
 #define PRIORITY_STARTROBOTWITHWD 20
-#define PRIORITY_RELOADWD 21
+//La priorité du reloadWD doit être assez haute pour que le   
+//message soit toujours envoyé sous les 50ms de tolérance
+#define PRIORITY_RELOADWD 23
 
 
 // Time definitions
@@ -594,6 +596,8 @@ void Tasks::ReloadWDTask(void *arg) {
     
     // Synchronization barrier (waiting that all tasks are starting)
     rt_sem_p(&sem_barrier, TM_INFINITE);
+    
+    
     
     rt_task_set_periodic(NULL, TM_NOW, RELOAD_WD_PERIOD);
     
